@@ -1,2 +1,25 @@
-# 資料庫系統導論 期末 Project
+# DBMS Final Project
+
+## 系統架構與環境
+
+- Programming Language：Go lang
+- Database：SQLite3
+- Environment：Windows 10
+
+##　介面截圖
+
+
+## 使用說明
+
+Prerequisites
+
+- Go lang
+
+## 資料庫設計
+
+### ER Diagram
+
+### Relation Schema
+
+### Table、Attribute、Relationship 說明
 
