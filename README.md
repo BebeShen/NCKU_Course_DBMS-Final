@@ -1,5 +1,9 @@
 # DBMS Final Project
 
+## Description
+
+Expired-soon Food Reserved System
+
 ## 系統架構與環境
 
 - Programming Language：Go lang
