@@ -1,6 +1,12 @@
 # DBMS Final Project
 
+<<<<<<< HEAD
 資料庫系統導論期末 Project: Expired Food Reservation System (EFRS)
+=======
+## Description
+
+Expired-soon Food Reserved System
+>>>>>>> c675c6472962a438b337f4574c82a0ac2b521876
 
 ## 系統架構與環境
 

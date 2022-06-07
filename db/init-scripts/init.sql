@@ -1,3 +1,8 @@
+USE `EFRS`;
+
+DROP TABLE IF EXISTS
+    `Course`;
+
 CREATE TABLE `Course` (
   `id` varchar(10) NOT NULL,
   `date` DATE NOT NULL DEFAULT (CURRENT_DATE),
@@ -8,12 +13,18 @@ CREATE TABLE `Course` (
   PRIMARY KEY (`id`, `date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS
+    `Student`;
+
 CREATE TABLE `Student` (
   `id` varchar(100) NOT NULL,
   `name` varchar(100) DEFAULT '',
   `password` varchar(100) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS
+    `Seat`;
 
 CREATE TABLE `Seat` (
   `course_id` varchar(10) NOT NULL,

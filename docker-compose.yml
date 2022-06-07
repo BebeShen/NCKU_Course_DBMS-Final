@@ -5,18 +5,18 @@ services:
     image: bitnami/mysql:latest
     container_name: db
     ports:
-      - 3309:3306
+      - 3306:3306
     volumes:
       - ./db/data:/bitnami/mysql/data
       - ./db/init-scripts:/docker-entrypoint-initdb.d
     environment:
-      ALLOW_EMPTY_PASSWORD: 'no'
-      # ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_USER: 'DBMS'
+      # ALLOW_EMPTY_PASSWORD: 'no'
+      ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: 'dbms'
       MYSQL_PASSWORD: '1234'
-      MYSQL_DATABASE: 'DBMS'
-      MYSQL_ROOT_USER: 'root'
-      MYSQL_ROOT_PASSWORD: 'ZFhLrUg1QV9FzUy4x8RT'
+      MYSQL_DATABASE: 'EFRS'
+      # MYSQL_ROOT_USER: 'root'
+      # MYSQL_ROOT_PASSWORD: 'ZFhLrUg1QV9FzUy4x8RT'
   # backend:
   #   build: ./backend
   #   container_name: backend
