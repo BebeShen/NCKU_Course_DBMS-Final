@@ -11,24 +11,6 @@ import (
 )
 
 /*
-	{Get} /hello
-*/
-func Hello(w http.ResponseWriter, req *http.Request) {
-	SetupCORS(&w, req)
-
-	c := new(Customer)
-	c.Username = "test"
-	c.Password = "test"
-	Insert(DB, c)
-	customers := FindAll(DB)
-	// convert object to json (byte[])
-	foo_marshalled, _ := json.Marshal(customers)
-	// convert json into string for sending response
-	fmt.Fprintf(w, string(foo_marshalled))
-	fmt.Println("hello")
-}
-
-/*
 	{Post} /searchCustomerById
 */
 func SearchCustomerById(w http.ResponseWriter, req *http.Request)  {

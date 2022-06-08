@@ -7,7 +7,7 @@ import (
 	. "github.com/bebeshen/efrs/pkg/utils"
 )
 
-func FindAll(db *sql.DB) []Customer {
+func FindAllCustomer(db *sql.DB) []Customer {
     rows, err := db.Query("SELECT * FROM customer")
     // defer rows.Close()
     var u Customer
@@ -21,9 +21,9 @@ func FindAll(db *sql.DB) []Customer {
     return customerList
 }
 
-func FindCustomerById(db *sql.DB, customer_id int) (user *Customer, err error) {
+func FindCustomerById(db *sql.DB, c_id int) (user *Customer, err error) {
 
-    result := db.QueryRow("SELECT * FROM customer WHERE id=?", customer_id)
+    result := db.QueryRow("SELECT * FROM customer WHERE id=?", c_id)
     fmt.Println("/db/FindOne [Scan]")
     var u = new(Customer)
     err = result.Scan(&u.Id, &u.Username, &u.Password)
@@ -36,11 +36,11 @@ func FindCustomerById(db *sql.DB, customer_id int) (user *Customer, err error) {
     return u, err
 }
 
-func Insert(db *sql.DB, customer *Customer) string {
+func InsertCustomer(db *sql.DB, customer *Customer) string {
     // insert
-    stmt, err := db.Prepare("INSERT INTO customer(username, password) values(?,?)")
+    stmt, err := db.Prepare("INSERT INTO customer(username, password) values(?,?,?)")
     CheckErr(err)
-    res, err := stmt.Exec(customer.Username, customer.Password)
+    res, err := stmt.Exec(customer.Username, customer.Password, customer.Location)
     CheckErr(err)
 
     id, err := res.LastInsertId()
@@ -51,11 +51,11 @@ func Insert(db *sql.DB, customer *Customer) string {
     return "success"
 }
 
-func Update(db *sql.DB, customer_id int, customer Customer) bool {
+func UpdateCustomer(db *sql.DB, customer Customer) bool {
     // update
-    stmt, err := db.Prepare("update customer set (id, username, password)=(?,?,?) where id=?")
+    stmt, err := db.Prepare("update customer set (username, password, location)=(?,?,?) where id=?")
     CheckErr(err)
-    res, err := stmt.Exec(customer.Id, customer.Username, customer.Password)
+    res, err := stmt.Exec(customer.Username, customer.Password, customer.Location, customer.Id)
     CheckErr(err)
     
     affect, err := res.RowsAffected()

@@ -11,11 +11,12 @@ import (
 func main() {
 
 	http.HandleFunc("/hello", Hello)
+	http.HandleFunc("/queryBuilder", Query)
 	http.HandleFunc("/searchCustomerById", SearchCustomerById)
 
-	DB, _ := Connect()
+	DB := Connect()
 	CreateTable(DB)
 
 	fmt.Println("Server is running at ", 8789)
-	http.ListenAndServe(":8789", nil)
+	http.ListenAndServe("127.0.0.1:8789", nil)
 }

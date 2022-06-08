@@ -19,20 +19,22 @@
     </header>
 
     <section>
-        <nav>
+        <!-- <nav>
           <ul>
             <li><a href="#">Expired Food</a></li>
             <li><a href="#">Store</a></li>
             <li><a href="#">Orders</a></li>
           </ul>
-        </nav>
+        </nav> -->
         <!-- 查詢工具 -->
         <label for="search-select">查詢工具</label>
         <select name="search-select" id="search-select">
             <option value="select-from-where">SELECT-FROM-WHERE</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
+            <option value="delete">DELETE</option>
+            <option value="insert">INSERT</option>
+            <option value="update">UPDATE</option>
+            <option value="exists">EXISTS</option>
+            <option value="not-exists">NOT EXISTS</option>
         </select>
         <br><br>
         <label for="sql-query">查詢SQL指令</label><br>
@@ -43,36 +45,20 @@
         <button id="submit-button">查詢</button>
     </section>
     <hr>
-    <div class="result">
-        <h2>查詢結果</h2>
+    <div class="data-table">
+        <table style="width:75%" id="data-table">
+            <h2>查詢結果</h2>
+        </table>
     </div>
-    
-    <table style="width:75%" class="order-table">
-        <tr>
-            <th>Company</th>
-            <th>Contact</th>
-            <th>Country</th>
-        </tr>
-            <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-        </tr>
-        <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-        </tr>
-    </table>
     <br>
-    <hr>
 
+    <!-- <hr>
     <label for="name">Button 測試</label>
     <textarea id="name" placeholder="please insert your name.."></textarea>
     <button id="ask-button">Ask for data</button>
     <h3 id="ask-time">asktime</h3>
 
     <div id="div1"><h2>使用 jQuery AJAX 修改文本内容</h2></div>
-    <button id="test-button">Send to backend</button>
+    <button id="test-button">Send to backend</button> -->
 </body>
 </html>

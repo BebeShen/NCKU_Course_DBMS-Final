@@ -37,16 +37,24 @@ form {
     padding: 10px;
 }
 
+.data-table {
+    text-align: center;
+    margin-top: 10px;
+}
+#data-table{
+    margin: 5px auto;
+}
 table, th, td {
     /* adjust table columns width */
     table-layout: fixed;
     border: 1px solid black;
     border-collapse: collapse;
+    text-align: center;
     /* border-style: outset; */
 }
 th, td {
     /* table row bg color */
-    background-color: #96D4D4;
+    background-color: #c3c3c3;
 }
 /* Clear floats after the columns */
 section::after {
