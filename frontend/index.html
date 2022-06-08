@@ -28,13 +28,17 @@
         </nav> -->
         <!-- 查詢工具 -->
         <label for="search-select">查詢工具</label>
-        <select name="search-select" id="search-select">
+        <select name="search-select" id="search-select" onchange="handleChange()">
             <option value="select-from-where">SELECT-FROM-WHERE</option>
             <option value="delete">DELETE</option>
             <option value="insert">INSERT</option>
             <option value="update">UPDATE</option>
             <option value="exists">EXISTS</option>
             <option value="not-exists">NOT EXISTS</option>
+        </select>
+        <select name="search2-select" id="search2-select">
+            <option value="customer">customer</option>
+            <option value="food">food</option>
         </select>
         <br><br>
         <label for="sql-query">查詢SQL指令</label><br>
@@ -48,6 +52,7 @@
     <div class="data-table">
         <table style="width:75%" id="data-table">
             <h2>查詢結果</h2>
+            <p id="data-message"></p>
         </table>
     </div>
     <br>

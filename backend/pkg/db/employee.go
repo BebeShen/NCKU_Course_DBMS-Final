@@ -22,7 +22,7 @@ func FindAllEmployee(db *sql.DB) []Employee {
 
 func FindEmployeeById(db *sql.DB, e_id int) (user *Employee, err error) {
 
-    result := db.QueryRow("SELECT * FROM Employee WHERE id=?", e_id)
+    result := db.QueryRow("SELECT * FROM Employee WHERE e_id=?", e_id)
     fmt.Println("/db/FindEmployeeById [Scan]")
     var e = new(Employee)
     err = result.Scan(&e.Id, &e.Username, &e.Password)
@@ -35,11 +35,11 @@ func FindEmployeeById(db *sql.DB, e_id int) (user *Employee, err error) {
     return e, err
 }
 
-func InsertEmployee(db *sql.DB, employee *Employee) string {
+func InsertEmployee(db *sql.DB, username string, password string) string {
     // insert
     stmt, err := db.Prepare("INSERT INTO Employee(username, password) values(?,?)")
     CheckErr(err)
-    res, err := stmt.Exec(employee.Username, employee.Password)
+    res, err := stmt.Exec(username, password)
     CheckErr(err)
 
     id, err := res.LastInsertId()
@@ -52,7 +52,7 @@ func InsertEmployee(db *sql.DB, employee *Employee) string {
 
 func UpdateEmployee(db *sql.DB, e_id int, employee Employee) bool {
     // update
-    stmt, err := db.Prepare("update Employee set (id, username, password)=(?,?,?) where id=?")
+    stmt, err := db.Prepare("update Employee set (id, username, password)=(?,?,?) where e_id=?")
     CheckErr(err)
     res, err := stmt.Exec(employee.Id, employee.Username, employee.Password, e_id)
     CheckErr(err)

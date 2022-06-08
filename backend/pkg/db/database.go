@@ -4,69 +4,66 @@ import (
 	"fmt"
 	"database/sql"
 
-    . "github.com/bebeshen/efrs/pkg/utils"
+    // . "github.com/bebeshen/efrs/pkg/utils"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 var DB *sql.DB
 
-func Connect() (db *sql.DB) {
+func Connect() () {
     // global db connection object
-	DB, err := sql.Open("sqlite3", "../db/sqlite/efrs.db")
-	CheckErr(err)
-
-	return DB
+	DB, _ = sql.Open("sqlite3", "../db/sqlite/efrs.db")
 }
 
-func CreateTable(db *sql.DB) {
+func CreateTable() {
     /* Customer Table */
-    fmt.Println("create customer table")
+    fmt.Println("create Customer table")
     customer_table := `
-    CREATE TABLE IF NOT EXISTS customer(
+    CREATE TABLE IF NOT EXISTS Customer(
         c_id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NULL,
         password TEXT NULL,
         c_location TEXT NULL
     );
 	`
-	_, err := db.Exec(customer_table)
+	_, err := DB.Exec(customer_table)
     if (err!=nil) {
-        fmt.Println("Fail creating customer table",err)
+        fmt.Println("Fail creating Customer table",err)
     }
 
     /* Employee Table */
-    fmt.Println("create employee table")
+    fmt.Println("create Employee table")
     employee_table := `
-    CREATE TABLE IF NOT EXISTS employee(
+    CREATE TABLE IF NOT EXISTS Employee(
         e_id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NULL,
         password TEXT NULL
     );
 	`
-	_, err = db.Exec(employee_table)
+	_, err = DB.Exec(employee_table)
     if (err != nil) {
-        fmt.Println("Fail creating employee table", err)
+        fmt.Println("Fail creating Employee table", err)
     }
 
     /* Store Table */
-    fmt.Println("create store table")
+    fmt.Println("create Store table")
     store_table := `
-    CREATE TABLE IF NOT EXISTS store(
+    CREATE TABLE IF NOT EXISTS Store(
         s_id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NULL,
         location TEXT NULL,
         type TEXT NULL
     );
 	`
-	_, err = db.Exec(store_table)
+	_, err = DB.Exec(store_table)
     if (err != nil) {
-        fmt.Println("Fail creating store table", err)
+        fmt.Println("Fail creating Store table", err)
     }
 
     /* Food Table */
-    fmt.Println("create food table")
+    fmt.Println("create Food table")
     food_table := `
-    CREATE TABLE IF NOT EXISTS food(
+    CREATE TABLE IF NOT EXISTS Food(
         f_id INTEGER PRIMARY KEY AUTOINCREMENT,
         category TEXT NULL,
         name TEXT NULL,
@@ -75,30 +72,30 @@ func CreateTable(db *sql.DB) {
         discount REAL DEFAULT 0.0
     );
 	`
-	_, err = db.Exec(food_table)
+	_, err = DB.Exec(food_table)
     if (err != nil) {
-        fmt.Println("Fail creating food table", err)
+        fmt.Println("Fail creating Food table", err)
     }
 
     /* Wasted Table */
-    fmt.Println("create wasted table")
+    fmt.Println("create Wasted table")
     wasted_table := `
-    CREATE TABLE IF NOT EXISTS wasted(
+    CREATE TABLE IF NOT EXISTS Wasted(
         f_id INTEGER,
         category TEXT NULL,
         name TEXT NULL
     );
 	`
-	_, err = db.Exec(wasted_table)
+	_, err = DB.Exec(wasted_table)
     if (err != nil) {
-        fmt.Println("Fail creating wasted table", err)
+        fmt.Println("Fail creating Wasted table", err)
     }
 
     /* Order Table */
-    fmt.Println("create orders table")
+    fmt.Println("create Orders table")
     // use orders to prevent conflict against sql keyword
     orders_table := `
-    CREATE TABLE IF NOT EXISTS orders(
+    CREATE TABLE IF NOT EXISTS Orders(
         c_id INTEGER NOT NULL,
         s_id INTEGER NOT NULL,
         f_id INTEGER NOT NULL,
@@ -107,14 +104,14 @@ func CreateTable(db *sql.DB) {
         PRIMARY KEY (c_id, s_id, f_id)
     );
 	`
-	_, err = db.Exec(orders_table)
+	_, err = DB.Exec(orders_table)
     if (err != nil) {
-        fmt.Println("Fail creating orders table", err)
+        fmt.Println("Fail creating Orders table", err)
     }
 }
 
 func QueryBuilder(sql_query string) (*sql.Rows, error) {
-    fmt.Println("SQL Query", sql_query)
+    fmt.Println("SQL Query:", sql_query)
     rows, err := DB.Query(sql_query)
     if (err!=nil) {
         fmt.Println(err)
@@ -122,10 +119,12 @@ func QueryBuilder(sql_query string) (*sql.Rows, error) {
     }
 
     cols, _ := rows.Columns()
+    fmt.Println("Columns: ")
 	for i := range cols {
 		fmt.Print(cols[i])
 		fmt.Print("\t")
 	}
+    fmt.Println()
     
     return rows, nil
 }
