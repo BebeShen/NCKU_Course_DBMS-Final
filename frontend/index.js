@@ -22,9 +22,9 @@ function buildHtmlTable(jsonData, selector) {
     for (var i = 0; i < jsonData.length; i++) {
         var row$ = $('<tr/>');
         for (var colIndex = 0; colIndex < columns.length; colIndex++) {
-        var cellValue = jsonData[i][columns[colIndex]];
-        if (cellValue == null) cellValue = "";
-        row$.append($('<td/>').html(cellValue));
+            var cellValue = jsonData[i][columns[colIndex]];
+            if (cellValue == null) cellValue = "";
+            row$.append($('<td/>').html(cellValue));
         }
         $(selector).append(row$);
     }
@@ -103,7 +103,11 @@ submitButton.addEventListener("click", function () {
                         req_url = "http://localhost:8789/getAllStore";
                         break;
                     case "order":
-                        sqlInput.textContent = "SELECT * FROM Orders";
+                        sqlInput.textContent = `"SELECT c.username AS 暱稱, f.name AS 食物名稱, s.name AS 商店名稱, o.message, o.status
+                        FROM Orders AS o
+                        LEFT JOIN Customer AS c ON o.c_id = c.c_id
+                        LEFT JOIN Food AS f on o.f_id = f.f_id
+                        LEFT JOIN Store AS s on o.s_id = s.s_id"`;
                         req_url = "http://localhost:8789/getAllOrder";
                         break;
                     default:

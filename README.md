@@ -20,6 +20,8 @@
 
 ![screenshot 3](./images/Food_insert_embed.jpg)
 
+![screenshot 3](./images/Order_select_embed.jpg)
+
 ## 使用說明
 
 Prerequisites
