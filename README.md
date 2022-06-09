@@ -14,6 +14,12 @@
 
 ## 介面截圖
 
+![screenshot 1](./images/Customer_select_embed.jpg)
+
+![screenshot 2](./images/Customer_select_query.jpg)
+
+![screenshot 3](./images/Food_insert_embed.jpg)
+
 ## 使用說明
 
 Prerequisites
@@ -37,7 +43,7 @@ Prerequisites
 
 ### Relation Schema
 
-![Relation Schema]()
+![Relation Schema](./images/RelationSchema.png)
 
 ### Table、Attribute、Relationship 說明
 
@@ -50,11 +56,13 @@ Prerequisites
   - `e_id`：**Primary Key**，employee的id(unique)。
   - `username`：員工帳號。
   - `password`：員工密碼。
+  - `work_for`:在哪間商店上班->`Store.s_id`。
 - **`Store`**：紀錄商店資訊。
   - `s_id`：**Primary Key**，商店的id(unique)。
   - `s_location`：商店的位址。
   - `name`：商店名稱。
   - `type`：商店種類，例如7-11、全家、麵包店...。
+  - `owner`：經理是哪位->`Employee.e_id`。
 - **`Food`**：紀錄所有登入之食物。
   - `f_id`：**Primary Key**，食物的id(unique)。
   - `category`：食物的種類，例如飯糰、麵包...。
@@ -62,15 +70,17 @@ Prerequisites
   - `expireDate`：食物有效期限。
   - `price`：販售價格。
   - `discount`：即期優惠。
+  - `store_at`：販售在哪間商店->`Store.s_id`。
 - **`Wasted`**：紀錄所有被浪費掉的食物。
-  - `f_id`：**Primary Key**，食物的id(unique)。
+  - `w_id`：**Primary Key**，Wasted的id(unique)。
+  - `f_id`：Food的id(unique)->`Food.f_id`。
   - `category`：食物的種類，例如飯糰、麵包...。
   - `name`：食物的名稱。
 - **`Orders`**：即期食品的預約訂單。
-  - `c_id`：**Primary Key**，顧客的id(unique)。
-  - `f_id`：**Primary Key**，食物的id(unique)。
-  - `s_id`：**Primary Key**，商店的id(unique)。
-    - `(c_id,f_id,s_id)`為composite PK。
+  - `c_id`：**Primary Key**，顧客的id(unique)->`Customer.c_id`。
+  - `f_id`：**Primary Key**，食物的id(unique)->`Food.f_id`。
+  - `s_id`：商店的id(unique)->->`Store.s_id`。
+    - `(c_id,f_id)`為composite PK。
   - `message`：顧客於此訂單之留言。
   - `status`：此訂單交易狀態，`預約`、`取消`、`結單`。
 
@@ -81,6 +91,18 @@ Prerequisites
   
     ```plain
     SELECT * FROM Customer
+    ```
+
+   - Employee：查詢所有員工資訊
+  
+    ```plain
+    SELECT * FROM Employee
+    ```
+
+   - Food：查詢所有食物資訊
+  
+    ```plain
+    SELECT * FROM Food
     ```
 
 2. **DELETE**
@@ -107,4 +129,3 @@ Prerequisites
 5. **EXISTS、NOT EXISTS**
    
 6. **AGGREGATE**
-    

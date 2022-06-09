@@ -2,8 +2,15 @@ const submitButton = document.getElementById("submit-button")
 const sqlQueryText = document.getElementById("sql-query")
 const sqlInput = document.getElementById("sql-input-command")
 const searchSelect = document.getElementById("search-select")
+const searchSelect2 = document.getElementById("search2-select")
 const messageText = document.getElementById("data-message")
 
+const selectOptions = {
+    "select-from-where":["customer","employee","food","wasted","store","order"], 
+    "delete":["customer","employee","food","order"], 
+    "insert":["customer","employee","food","order"], 
+    "update":["customer","food","order"]
+};
 
 // ref: https://stackoverflow.com/questions/5180382/convert-json-data-to-a-html-table
 function buildHtmlTable(jsonData, selector) {
@@ -44,7 +51,13 @@ function addAllColumnHeaders(jsonData, selector) {
 }
 
 function handleChange() {
+    var options_str = "";
     console.log(searchSelect.value)
+    searchSelect2.innerHTML = "";
+    for (let index = 0; index < selectOptions[searchSelect.value].length; index++) {
+        options_str += '<option value="' + selectOptions[searchSelect.value][index] + '">' + selectOptions[searchSelect.value][index] + '</option>';
+    }
+    searchSelect2.innerHTML = options_str;
 }
 
 submitButton.addEventListener("click", function () {
@@ -67,9 +80,37 @@ submitButton.addEventListener("click", function () {
         // use Button
         switch (searchSelect.value) {
             case "select-from-where":
-                sqlInput.textContent = "SELECT * FROM customer";
+                var req_url = "http://localhost:8789/getAllCustomer";
+                switch (searchSelect2.value) {
+                    case "customer":
+                        sqlInput.textContent = "SELECT * FROM Customer";
+                        req_url = "http://localhost:8789/getAllCustomer";
+                        break;
+                    case "employee":
+                        sqlInput.textContent = "SELECT * FROM Employee";
+                        req_url = "http://localhost:8789/getAllEmployee";
+                        break;
+                    case "food":
+                        sqlInput.textContent = "SELECT * FROM Food";
+                        req_url = "http://localhost:8789/getAllFood";
+                        break;
+                    case "wasted":
+                        sqlInput.textContent = "SELECT * FROM Wasted";
+                        req_url = "http://localhost:8789/getAllWasted";
+                        break;
+                    case "store":
+                        sqlInput.textContent = "SELECT * FROM Store";
+                        req_url = "http://localhost:8789/getAllStore";
+                        break;
+                    case "order":
+                        sqlInput.textContent = "SELECT * FROM Orders";
+                        req_url = "http://localhost:8789/getAllOrder";
+                        break;
+                    default:
+                        break;
+                }
                 $.ajax({
-                    url: "http://localhost:8789/getAllCustomer", 
+                    url: req_url, 
                     type: "get",
                     data: {},
                     success: function(result){
@@ -79,15 +120,46 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "insert":
-                sqlInput.textContent = "INSERT INTO customer (username, password, c_location) VALUES ('test', 'test', '701台南市東區莊敬里 中華東路一段 66號');";
+                var req_url = "http://localhost:8789/addCustomer";
+                var req_data = {};
+                switch (searchSelect2.value) {
+                    case "customer":
+                        sqlInput.textContent = "INSERT INTO Customer (username, password, c_location) VALUES ('test', 'test', '701台南市東區莊敬里 中華東路一段 66號');";
+                        req_url = "http://localhost:8789/addCustomer";
+                        req_data = {
+                            username:"test",
+                            password:"test",
+                            c_location:"701台南市東區莊敬里 中華東路一段 66號"
+                        };
+                        break;
+                    case "employee":
+                        sqlInput.textContent = "INSERT INTO Employee(username, password) VALUES ('employee', 'employee_password')";
+                        req_url = "http://localhost:8789/addEmployee";
+                        req_data = {
+                            username:"employee",
+                            password:"employee_password",
+                            work_for:1
+                        }
+                        break;
+                    case "food":
+                        sqlInput.textContent = "INSERT INTO Food(category, name, expireDate, price, discount) VALUES ('riceroll', '炙燒明太子鮭魚飯糰', '2022-06-12', 33, 0)";
+                        req_url = "http://localhost:8789/addFood";
+                        req_data = {
+                            category: "riceroll",
+                            name: "炙燒明太子鮭魚飯糰",
+                            expireDate: "2022-06-12",
+                            price: 33,
+                            discount: 0,
+                            store_at: 1
+                        }
+                        break;
+                    default:
+                        break;
+                }
                 $.ajax({
-                    url: "http://localhost:8789/addCustomer", 
+                    url: req_url, 
                     type: "post",
-                    data: {
-                        username:"test",
-                        password:"test",
-                        c_location:"701台南市東區莊敬里 中華東路一段 66號"
-                    },
+                    data: req_data,
                     success: function(result){
                         console.log(result);
                         messageText.textContent = result;
