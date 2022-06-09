@@ -1,7 +1,5 @@
 package utils
 
-import "time"
-
 type Customer struct {
 	Id int
 	Username string
@@ -13,6 +11,7 @@ type Employee struct {
 	Id int
 	Username string
 	Password string
+	Work_for int
 }
 
 type Store struct {
@@ -20,30 +19,31 @@ type Store struct {
 	Location string
 	Name string
 	Type string
+	Owner int
 }
 
 type Food struct {
 	Id int
 	Category string
 	Name string
-	ExpireDate time.Time
-	Price float32
-	Discount float32
+	ExpireDate string
+	Price float64
+	Discount float64
+	Store_at int
 }
 
 type Wasted struct {
 	Id int
+	FoodId int
 	Category string
 	Name string
 }
 
 
 type Order struct {
-	Id int
 	CustomerId int
-	StoreId int
 	FoodId int
-	// Date time.Time
-	Status string
+	StoreId int
 	Message string
+	Status string
 }

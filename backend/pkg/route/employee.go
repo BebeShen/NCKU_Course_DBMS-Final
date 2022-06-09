@@ -11,61 +11,35 @@ import (
 )
 
 /*
-	{POST} /searchCustomerById
+	{POST} /searchEmployeeById
 */
-func SearchCustomerById(w http.ResponseWriter, req *http.Request)  {
+func SearchEmployeeById(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/SearchCustomerById")
+	fmt.Println("/route/SearchEmployeeById")
 
 	// check method
 	CheckMethod(&w, req.Method, "POST")
 	// parse data
 	ParseRequestData(&w, req)
 
-	customer_id, _ := strconv.Atoi(req.FormValue("c_id"))
-	customer, _ := FindCustomerById(DB, customer_id)
-	fmt.Println(customer)
+	employee_id, _ := strconv.Atoi(req.FormValue("e_id"))
+	employee, _ := FindEmployeeById(DB, employee_id)
+	fmt.Println(employee)
 	// convert object to json (byte[])
-	foo_marshalled, _ := json.Marshal(customer)
+	foo_marshalled, _ := json.Marshal(employee)
 	// convert json into string for sending response
 	fmt.Fprintf(w, string(foo_marshalled))
-	fmt.Printf("customer_id = %d\n", customer_id)
+	fmt.Printf("employee_id = %d\n", employee_id)
 }
 
 /*
-	{GET} /getAllCustomer
+	{GET} /getAllEmployee
 */
-func GetAllCustomer(w http.ResponseWriter, req *http.Request)  {
+func GetAllEmployee(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/getAllCustomer")
+	fmt.Println("/route/getAllEmployee")
 
-	data := FindAllCustomer(DB)
-
-	// convert object to json (byte[])
-	foo_marshalled, _ := json.Marshal(data)
-	// convert json into string for sending response
-	fmt.Fprintf(w, string(foo_marshalled))
-}
-
-/*
-	{POST} /addCustomer
-*/
-func AddCustomer(w http.ResponseWriter, req *http.Request)  {
-	SetupCORS(&w, req)
-	fmt.Println("/route/addCustomer")
-	
-	// check method
-	CheckMethod(&w, req.Method, "POST")
-	// parse data
-	ParseRequestData(&w, req)
-
-	c_location := ""
-	// 不存在 -> 回傳空字串
-	if req.FormValue("c_location") != "" {
-		c_location = req.FormValue("c_location")
-	}
-
-	data := InsertCustomerDB(DB, req.FormValue("username"), req.FormValue("password"), c_location)
+	data := FindAllEmployee(DB)
 
 	// convert object to json (byte[])
 	foo_marshalled, _ := json.Marshal(data)
@@ -74,23 +48,44 @@ func AddCustomer(w http.ResponseWriter, req *http.Request)  {
 }
 
 /*
-	{POST} /updateCustomer
+	{POST} /addEmployee
 */
-func UpdateCustomer(w http.ResponseWriter, req *http.Request)  {
+func AddEmployee(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/updateCustomer")
+	fmt.Println("/route/addEmployee")
+	
+	// check method
+	CheckMethod(&w, req.Method, "POST")
+	// parse data
+	ParseRequestData(&w, req)
+	
+	work_for, _ := strconv.Atoi(req.FormValue("work_for"))
+	data := InsertEmployeeDB(DB, req.FormValue("username"), req.FormValue("password"), work_for)
+
+	// convert object to json (byte[])
+	foo_marshalled, _ := json.Marshal(data)
+	// convert json into string for sending response
+	fmt.Fprintf(w, string(foo_marshalled))
+}
+
+/*
+	{POST} /updateEmployee
+*/
+func UpdateEmployee(w http.ResponseWriter, req *http.Request)  {
+	SetupCORS(&w, req)
+	fmt.Println("/route/updateEmployee")
 	
 	// check method
 	CheckMethod(&w, req.Method, "POST")
 	// parse data
 	ParseRequestData(&w, req)
 
-	customer_id, _ := strconv.Atoi(req.FormValue("c_id"))
-	customer, _ := FindCustomerById(DB, customer_id)
-	customer.Location = req.FormValue("c_location")
+	employee_id, _ := strconv.Atoi(req.FormValue("e_id"))
+	employee, _ := FindEmployeeById(DB, employee_id)
+	employee.Password = req.FormValue("password")
 
 	response := "failure"
-	if f := UpdateCustomerDB(DB, customer) ; f {
+	if f := UpdateEmployeeDB(DB, employee) ; f {
 		response = "success"
 	}
 
@@ -101,21 +96,21 @@ func UpdateCustomer(w http.ResponseWriter, req *http.Request)  {
 }
 
 /*
-	{POST} /deleteCustomer
+	{POST} /deleteEmployee
 */
-func DeleteCustomer(w http.ResponseWriter, req *http.Request)  {
+func DeleteEmployee(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/deleteCustomer")
+	fmt.Println("/route/deleteEmployee")
 	
 	// check method
 	CheckMethod(&w, req.Method, "POST")
 	// parse data
 	ParseRequestData(&w, req)
 
-	customer_id, _ := strconv.Atoi(req.FormValue("c_id"))
+	employee_id, _ := strconv.Atoi(req.FormValue("e_id"))
 
 	response := "failure"
-	if f := DeleteCustomerDB(DB, customer_id) ; f {
+	if f := DeleteEmployeeDB(DB, employee_id) ; f {
 		response = "success"
 	}
 

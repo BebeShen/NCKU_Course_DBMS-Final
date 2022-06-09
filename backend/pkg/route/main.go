@@ -65,7 +65,7 @@ func Query(w http.ResponseWriter, req *http.Request) {
 	var c Customer
 	var data []Customer
 	for rows.Next() {
-		if  err := rows.Scan(&c.Id, &c.Username, &c.Password); err != nil {
+		if  err := rows.Scan(&c.Id, &c.Username, &c.Password, &c.Location); err != nil {
 			fmt.Println(err)
 		}
 		data = append(data, c)

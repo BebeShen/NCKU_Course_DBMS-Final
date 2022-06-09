@@ -11,61 +11,35 @@ import (
 )
 
 /*
-	{POST} /searchCustomerById
+	{POST} /searchFoodById
 */
-func SearchCustomerById(w http.ResponseWriter, req *http.Request)  {
+func SearchFoodById(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/SearchCustomerById")
+	fmt.Println("/route/SearchFoodById")
 
 	// check method
 	CheckMethod(&w, req.Method, "POST")
 	// parse data
 	ParseRequestData(&w, req)
 
-	customer_id, _ := strconv.Atoi(req.FormValue("c_id"))
-	customer, _ := FindCustomerById(DB, customer_id)
-	fmt.Println(customer)
+	food_id, _ := strconv.Atoi(req.FormValue("f_id"))
+	food, _ := FindFoodById(DB, food_id)
+	fmt.Println(food)
 	// convert object to json (byte[])
-	foo_marshalled, _ := json.Marshal(customer)
+	foo_marshalled, _ := json.Marshal(food)
 	// convert json into string for sending response
 	fmt.Fprintf(w, string(foo_marshalled))
-	fmt.Printf("customer_id = %d\n", customer_id)
+	fmt.Printf("Food_id = %d\n", food_id)
 }
 
 /*
-	{GET} /getAllCustomer
+	{GET} /getAllFood
 */
-func GetAllCustomer(w http.ResponseWriter, req *http.Request)  {
+func GetAllFood(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/getAllCustomer")
+	fmt.Println("/route/getAllFood")
 
-	data := FindAllCustomer(DB)
-
-	// convert object to json (byte[])
-	foo_marshalled, _ := json.Marshal(data)
-	// convert json into string for sending response
-	fmt.Fprintf(w, string(foo_marshalled))
-}
-
-/*
-	{POST} /addCustomer
-*/
-func AddCustomer(w http.ResponseWriter, req *http.Request)  {
-	SetupCORS(&w, req)
-	fmt.Println("/route/addCustomer")
-	
-	// check method
-	CheckMethod(&w, req.Method, "POST")
-	// parse data
-	ParseRequestData(&w, req)
-
-	c_location := ""
-	// 不存在 -> 回傳空字串
-	if req.FormValue("c_location") != "" {
-		c_location = req.FormValue("c_location")
-	}
-
-	data := InsertCustomerDB(DB, req.FormValue("username"), req.FormValue("password"), c_location)
+	data := FindAllFood(DB)
 
 	// convert object to json (byte[])
 	foo_marshalled, _ := json.Marshal(data)
@@ -74,23 +48,49 @@ func AddCustomer(w http.ResponseWriter, req *http.Request)  {
 }
 
 /*
-	{POST} /updateCustomer
+	{POST} /addFood
 */
-func UpdateCustomer(w http.ResponseWriter, req *http.Request)  {
+func AddFood(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/updateCustomer")
+	fmt.Println("/route/addFood")
 	
 	// check method
 	CheckMethod(&w, req.Method, "POST")
 	// parse data
 	ParseRequestData(&w, req)
 
-	customer_id, _ := strconv.Atoi(req.FormValue("c_id"))
-	customer, _ := FindCustomerById(DB, customer_id)
-	customer.Location = req.FormValue("c_location")
+	price, _ := strconv.ParseFloat(req.FormValue("price"), 64)
+	discount, _ := strconv.ParseFloat(req.FormValue("discount"), 64)
+	store_at, _ := strconv.Atoi(req.FormValue("store_at"))
+
+	data := InsertFoodDB(DB, req.FormValue("category"), req.FormValue("name"), req.FormValue("expireDate"), price, discount, store_at)
+
+	// convert object to json (byte[])
+	foo_marshalled, _ := json.Marshal(data)
+	// convert json into string for sending response
+	fmt.Fprintf(w, string(foo_marshalled))
+}
+
+/*
+	{POST} /updateFood
+
+	Description：Only update discount
+*/
+func UpdateFood(w http.ResponseWriter, req *http.Request)  {
+	SetupCORS(&w, req)
+	fmt.Println("/route/updateFood")
+	
+	// check method
+	CheckMethod(&w, req.Method, "POST")
+	// parse data
+	ParseRequestData(&w, req)
+
+	food_id, _ := strconv.Atoi(req.FormValue("f_id"))
+	food, _ := FindFoodById(DB, food_id)
+	food.Discount, _ = strconv.ParseFloat(req.FormValue("discount"), 64)
 
 	response := "failure"
-	if f := UpdateCustomerDB(DB, customer) ; f {
+	if f := UpdateFoodDB(DB, food) ; f {
 		response = "success"
 	}
 
@@ -101,21 +101,21 @@ func UpdateCustomer(w http.ResponseWriter, req *http.Request)  {
 }
 
 /*
-	{POST} /deleteCustomer
+	{POST} /deleteFood
 */
-func DeleteCustomer(w http.ResponseWriter, req *http.Request)  {
+func DeleteFood(w http.ResponseWriter, req *http.Request)  {
 	SetupCORS(&w, req)
-	fmt.Println("/route/deleteCustomer")
+	fmt.Println("/route/deleteFood")
 	
 	// check method
 	CheckMethod(&w, req.Method, "POST")
 	// parse data
 	ParseRequestData(&w, req)
 
-	customer_id, _ := strconv.Atoi(req.FormValue("c_id"))
+	food_id, _ := strconv.Atoi(req.FormValue("f_id"))
 
 	response := "failure"
-	if f := DeleteCustomerDB(DB, customer_id) ; f {
+	if f := DeleteFoodDB(DB, food_id) ; f {
 		response = "success"
 	}
 

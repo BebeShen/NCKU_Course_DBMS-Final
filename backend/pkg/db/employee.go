@@ -13,7 +13,7 @@ func FindAllEmployee(db *sql.DB) []Employee {
     var e Employee
     var employeeList []Employee
     for rows.Next() {
-        err = rows.Scan(&e.Id, &e.Username, &e.Password)
+        err = rows.Scan(&e.Id, &e.Username, &e.Password, &e.Work_for)
         CheckErr(err)
         employeeList = append(employeeList, e)
     }
@@ -23,23 +23,21 @@ func FindAllEmployee(db *sql.DB) []Employee {
 func FindEmployeeById(db *sql.DB, e_id int) (user *Employee, err error) {
 
     result := db.QueryRow("SELECT * FROM Employee WHERE e_id=?", e_id)
-    fmt.Println("/db/FindEmployeeById [Scan]")
     var e = new(Employee)
-    err = result.Scan(&e.Id, &e.Username, &e.Password)
+    err = result.Scan(&e.Id, &e.Username, &e.Password, &e.Work_for)
     if err != nil {
         if err == sql.ErrNoRows {
             return nil, ErrorUserNotExist
         }
     }
-    fmt.Println("/db/FindEmployeeById [Finish]")
     return e, err
 }
 
-func InsertEmployee(db *sql.DB, username string, password string) string {
+func InsertEmployeeDB(db *sql.DB, username string, password string, work_for int) string {
     // insert
-    stmt, err := db.Prepare("INSERT INTO Employee(username, password) values(?,?)")
+    stmt, err := db.Prepare("INSERT INTO Employee(username, password, work_for) values(?,?,?)")
     CheckErr(err)
-    res, err := stmt.Exec(username, password)
+    res, err := stmt.Exec(username, password, work_for)
     CheckErr(err)
 
     id, err := res.LastInsertId()
@@ -50,11 +48,24 @@ func InsertEmployee(db *sql.DB, username string, password string) string {
     return "success"
 }
 
-func UpdateEmployee(db *sql.DB, e_id int, employee Employee) bool {
+func UpdateEmployeeDB(db *sql.DB, employee *Employee) bool {
     // update
-    stmt, err := db.Prepare("update Employee set (id, username, password)=(?,?,?) where e_id=?")
+    stmt, err := db.Prepare("update Employee set (username, password, work_for)=(?,?,?) where e_id=?")
     CheckErr(err)
-    res, err := stmt.Exec(employee.Id, employee.Username, employee.Password, e_id)
+    res, err := stmt.Exec(employee.Username, employee.Password, employee.Work_for, employee.Id)
+    CheckErr(err)
+    
+    affect, err := res.RowsAffected()
+    CheckErr(err)
+
+    return affect!=0
+}
+
+func DeleteEmployeeDB(db *sql.DB, e_id int) bool {
+    // delete
+    stmt, err := db.Prepare("DELETE FROM Employee WHERE e_id=?")
+    CheckErr(err)
+    res, err := stmt.Exec(e_id)
     CheckErr(err)
     
     affect, err := res.RowsAffected()
