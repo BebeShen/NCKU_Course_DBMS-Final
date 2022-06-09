@@ -6,10 +6,20 @@ const searchSelect2 = document.getElementById("search2-select")
 const messageText = document.getElementById("data-message")
 
 const selectOptions = {
-    "select-from-where":["customer","employee","food","wasted","store","order"], 
-    "delete":["customer","employee","food","order"], 
+    "select-from-where":["customer","food","wasted","store","order"], 
     "insert":["customer","employee","food","order"], 
-    "update":["customer","food","order"]
+    "update":["customer","order"],
+    "delete":["customer","order"], 
+    "in":["food"],
+    "not-in":["food"],
+    "exists":["food"],
+    "not-exists":["food"],
+    "count":["food"],
+    "sum":["food"],
+    "max":["food"],
+    "min":["food"],
+    "avg":["food"],
+    "having":["food"],
 };
 
 // ref: https://stackoverflow.com/questions/5180382/convert-json-data-to-a-html-table
@@ -103,11 +113,11 @@ submitButton.addEventListener("click", function () {
                         req_url = "http://localhost:8789/getAllStore";
                         break;
                     case "order":
-                        sqlInput.textContent = `"SELECT c.username AS 暱稱, f.name AS 食物名稱, s.name AS 商店名稱, o.message, o.status
+                        sqlInput.textContent = `SELECT c.username AS 暱稱, f.name AS 食物名稱, s.name AS 商店名稱, o.message, o.status
                         FROM Orders AS o
                         LEFT JOIN Customer AS c ON o.c_id = c.c_id
                         LEFT JOIN Food AS f on o.f_id = f.f_id
-                        LEFT JOIN Store AS s on o.s_id = s.s_id"`;
+                        LEFT JOIN Store AS s on o.s_id = s.s_id`;
                         req_url = "http://localhost:8789/getAllOrder";
                         break;
                     default:
@@ -186,6 +196,146 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "delete":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "in":
+                sqlInput.textContent = `SELECT * FROM Food WHERE category IN ('riceroll','bread') AND store_at = 1`;
+                $.ajax({
+                    url: "http://localhost:8789/queryBuilder", 
+                    type: "post",
+                    data: {
+                        sql_query:sqlInput.textContent
+                    },
+                    success: function(result){
+                        console.log(result);
+                        buildHtmlTable(JSON.parse(result), "#data-table")
+                    }
+                });
+                break;
+            case "not-in":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "exists":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "not-exists":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "count":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "sum":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "max":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "min":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "avg":
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                $.ajax({
+                    url: "http://localhost:8789/deleteCustomer", 
+                    type: "post",
+                    data: {
+                        c_id:1
+                    },
+                    success: function(result){
+                        console.log(result);
+                        messageText.textContent = result;
+                    }
+                });
+                break;
+            case "having":
                 sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
                 $.ajax({
                     url: "http://localhost:8789/deleteCustomer", 
