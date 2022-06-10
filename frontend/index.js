@@ -7,9 +7,9 @@ const messageText = document.getElementById("data-message")
 
 const selectOptions = {
     "select-from-where":["customer","food","wasted","store","order"], 
-    "insert":["customer","employee","food","order"], 
-    "update":["customer","order"],
-    "delete":["customer","order"], 
+    "insert":["customer","employee","food"], 
+    "update":["customer"],
+    "delete":["customer"], 
     "in":["food"],
     "not-in":["food"],
     "exists":["food"],
@@ -196,7 +196,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "delete":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=9;";
                 $.ajax({
                     url: "http://localhost:8789/deleteCustomer", 
                     type: "post",
@@ -224,128 +224,145 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "not-in":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `SELECT * FROM Food WHERE f_id NOT IN (SELECT f_id FROM Orders) AND store_at = 1`;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "exists":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `SELECT * FROM Food WHERE EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id)`;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "not-exists":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `SELECT * FROM Food WHERE NOT EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id )`;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "count":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `SELECT COUNT(*) FROM Orders WHERE s_id = 1`;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "sum":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `
+                SELECT SUM(f.price) AS price 
+                FROM Orders AS o LEFT JOIN Food AS f ON o.f_id = f.f_id 
+                WHERE o.c_id = 1`;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "max":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `
+                SELECT name,MAX(left_food) AS num_left_food 
+                FROM ( 
+                  SELECT Store.name AS name, COUNT(store_at) AS left_food 
+                  FROM Food 
+                  LEFT JOIN Store ON Food.store_at = Store.s_id 
+                  GROUP BY store_at 
+                )
+                `;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "min":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `SELECT Food.f_id, Food.name, MIN(expireDate) AS expiredDate FROM Food WHERE store_at = 1`;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "avg":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `SELECT category, AVG(price) as price FROM Food WHERE category="riceroll"`;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;
             case "having":
-                sqlInput.textContent = "DELETE FROM Customer WHERE c_id=1;";
+                sqlInput.textContent = `
+                SELECT s.name, COUNT(f_id) AS num_food_left
+                FROM Food AS f
+                LEFT JOIN Store AS s ON f.store_at = s.s_id
+                GROUP BY store_at
+                HAVING COUNT(f_id) > 5
+                `;
                 $.ajax({
-                    url: "http://localhost:8789/deleteCustomer", 
+                    url: "http://localhost:8789/queryBuilder", 
                     type: "post",
                     data: {
-                        c_id:1
+                        sql_query:sqlInput.textContent
                     },
                     success: function(result){
                         console.log(result);
-                        messageText.textContent = result;
+                        buildHtmlTable(JSON.parse(result), "#data-table")
                     }
                 });
                 break;

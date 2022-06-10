@@ -4,8 +4,6 @@
 
 ## 系統簡介
 
-
-
 ## 系統架構與環境
 
 - Programming Language：Golang
@@ -35,6 +33,7 @@ Prerequisites
 
     go run .
     ```
+
 2. Open frontend(`index.html`)
 
 ## 資料庫設計
@@ -91,43 +90,125 @@ Prerequisites
 1. **SELECT-FROM-WHERE**
    - Customer：查詢所有顧客資訊
   
-    ```plain
-    SELECT * FROM Customer
-    ```
+      ```sql
+      SELECT * FROM Customer
+      ```
 
    - Employee：查詢所有員工資訊
   
-    ```plain
-    SELECT * FROM Employee
-    ```
+      ```sql
+      SELECT * FROM Employee
+      ```
 
    - Food：查詢所有食物資訊
   
-    ```plain
-    SELECT * FROM Food
-    ```
+      ```sql
+      SELECT * FROM Food
+      ```
 
 2. **DELETE**
     - Customer：顧客刪除帳號
 
-    ```plain
-    DELETE FROM Customer WHERE c_id=1;
-    ```
+      ```sql
+      DELETE FROM Customer WHERE c_id=1;
+      ```
 
 3. **INSERT**
    - Customer：新顧客註冊
 
-    ```plain
-    INSERT INTO customer (username, password, c_location) VALUES ('test', 'test', '701台南市東區莊敬里 中華東路一段 66號');
-    ```
+      ```sql
+      INSERT INTO customer (username, password, c_location) VALUES ('test', 'test', '701台南市東區莊敬里 中華東路一段 66號');
+      ```
 
 4. **UPDATE**
    - Customer：顧客更新當前GPS位置
 
-    ```plain
-    UPDATE Customer SET c_location='701台南市東區大學路1號' WHERE c_id = 1;
+      ```sql
+      UPDATE Customer SET c_location='701台南市東區大學路1號' WHERE c_id = 1;
+      ```
+
+5. **IN**
+   - Food：查詢在商店1中飯糰和麵包類的所有食物
+
+    ```sql
+      SELECT * FROM Food WHERE category IN ('riceroll','bread') AND store_at = 1
     ```
-   
-5. **EXISTS、NOT EXISTS**
-   
-6. **AGGREGATE**
+
+6. **NOT-IN**
+   - Food：查詢在商店1中尚未被預約的所有食物
+
+    ```sql
+      SELECT * FROM Food WHERE f_id NOT IN (SELECT f_id FROM Orders) AND store_at = 1
+    ```
+
+7. **EXISTS**
+   - Food：查詢在商店1中已經被預約的所有食物
+
+    ```sql
+      SELECT * FROM Food WHERE EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id)
+    ```
+
+8. **NOT-EXISTS**
+   - Food：查詢在商店1中尚未預約的所有食物
+
+    ```sql
+      SELECT * FROM Food WHERE NOT EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id )
+    ```
+
+9. **COUNT**
+
+   - Orders：查詢在商店1的訂單個數
+
+    ```sql
+      SELECT COUNT(*) FROM Orders WHERE s_id = 1
+    ```
+
+10. **SUM**
+
+    - Orders：查詢顧客1的所有訂單金額
+
+      ```sql
+      SELECT SUM(f.price) AS price FROM Orders AS oLEFT JOIN Food AS f ON o.f_id = f.f_id WHERE o.c_id = 1
+      ```
+
+11. **MAX**
+
+    - Food：查詢在所有商店尚未預約食物最多的商店
+
+      ```sql
+      SELECT name,MAX(left_food) AS num_left_food 
+      FROM ( 
+        SELECT Store.name AS name, COUNT(store_at) AS left_food 
+        FROM Food 
+        LEFT JOIN Store ON Food.store_at = Store.s_id 
+        GROUP BY store_at 
+        )
+      ```
+
+12. **MIN**
+
+    - Food：查詢在商店1中目前最接近保存期限的食物
+
+      ```sql
+      SELECT Food.f_id, Food.name, MIN(expireDate) AS expiredDate FROM Food WHERE store_at = 1
+      ```
+
+13. **AVG**
+
+    - Food：查詢在商店1中飯糰的平均價格
+
+      ```sql
+      SELECT category, AVG(price) as price FROM Food WHERE category="riceroll"
+      ```
+
+14. **HAVING**
+
+    - Food：查詢在所有商店中剩餘食物個數大於5的商店
+
+      ```sql
+      SELECT s.name, COUNT(f_id) AS num_food_left
+      FROM Food AS f
+      LEFT JOIN Store AS s ON f.store_at = s.s_id
+      GROUP BY store_at
+      HAVING COUNT(f_id) > 5
+      ```
