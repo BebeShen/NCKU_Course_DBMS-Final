@@ -1,6 +1,7 @@
 const submitButton = document.getElementById("submit-button")
 const sqlQueryText = document.getElementById("sql-query")
 const sqlInput = document.getElementById("sql-input-command")
+const sqldes = document.getElementById("sql-des")
 const searchSelect = document.getElementById("search-select")
 const searchSelect2 = document.getElementById("search2-select")
 const messageText = document.getElementById("data-message")
@@ -87,6 +88,7 @@ submitButton.addEventListener("click", function () {
         });
     }
     else {
+        sqldes.textContent = ""
         // use Button
         switch (searchSelect.value) {
             case "select-from-where":
@@ -201,7 +203,7 @@ submitButton.addEventListener("click", function () {
                     url: "http://localhost:8789/deleteCustomer", 
                     type: "post",
                     data: {
-                        c_id:1
+                        c_id:9
                     },
                     success: function(result){
                         console.log(result);
@@ -210,6 +212,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "in":
+                sqldes.textContent = "查詢在商店1中飯糰和麵包類的所有食物"
                 sqlInput.textContent = `SELECT * FROM Food WHERE category IN ('riceroll','bread') AND store_at = 1`;
                 $.ajax({
                     url: "http://localhost:8789/queryBuilder", 
@@ -224,6 +227,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "not-in":
+                sqldes.textContent = "查詢在商店1中尚未被預約的所有食物"
                 sqlInput.textContent = `SELECT * FROM Food WHERE f_id NOT IN (SELECT f_id FROM Orders) AND store_at = 1`;
                 $.ajax({
                     url: "http://localhost:8789/queryBuilder", 
@@ -238,6 +242,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "exists":
+                sqldes.textContent = "查詢在商店1中已經被預約的所有食物"
                 sqlInput.textContent = `SELECT * FROM Food WHERE EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id)`;
                 $.ajax({
                     url: "http://localhost:8789/queryBuilder", 
@@ -252,6 +257,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "not-exists":
+                sqldes.textContent = "查詢在商店1中尚未預約的所有食物"
                 sqlInput.textContent = `SELECT * FROM Food WHERE NOT EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id )`;
                 $.ajax({
                     url: "http://localhost:8789/queryBuilder", 
@@ -266,6 +272,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "count":
+                sqldes.textContent = "查詢在商店1的訂單個數"
                 sqlInput.textContent = `SELECT COUNT(*) FROM Orders WHERE s_id = 1`;
                 $.ajax({
                     url: "http://localhost:8789/queryBuilder", 
@@ -280,6 +287,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "sum":
+                sqldes.textContent = "查詢顧客1的所有訂單金額"
                 sqlInput.textContent = `
                 SELECT SUM(f.price) AS price 
                 FROM Orders AS o LEFT JOIN Food AS f ON o.f_id = f.f_id 
@@ -297,6 +305,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "max":
+                sqldes.textContent = "查詢在所有商店尚未預約食物最多的商店"
                 sqlInput.textContent = `
                 SELECT name,MAX(left_food) AS num_left_food 
                 FROM ( 
@@ -319,6 +328,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "min":
+                sqldes.textContent = "查詢在商店1中目前最接近保存期限的食物"
                 sqlInput.textContent = `SELECT Food.f_id, Food.name, MIN(expireDate) AS expiredDate FROM Food WHERE store_at = 1`;
                 $.ajax({
                     url: "http://localhost:8789/queryBuilder", 
@@ -333,6 +343,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "avg":
+                sqldes.textContent = "查詢在商店1中飯糰的平均價格"
                 sqlInput.textContent = `SELECT category, AVG(price) as price FROM Food WHERE category="riceroll"`;
                 $.ajax({
                     url: "http://localhost:8789/queryBuilder", 
@@ -347,6 +358,7 @@ submitButton.addEventListener("click", function () {
                 });
                 break;
             case "having":
+                sqldes.textContent = "查詢在所有商店中剩餘食物個數大於5的商店"
                 sqlInput.textContent = `
                 SELECT s.name, COUNT(f_id) AS num_food_left
                 FROM Food AS f

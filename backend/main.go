@@ -39,7 +39,7 @@ func main() {
 
 	Connect()
 	CreateTable()
-	// InsertDefaultData()
+	InsertDefaultData()
 
 	fmt.Println("Server is running at ", 8789)
 	http.ListenAndServe("127.0.0.1:8789", nil)
