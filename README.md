@@ -134,38 +134,38 @@ Prerequisites
 5. **IN**
    - Food：查詢在商店1中飯糰和麵包類的所有食物
 
-    ```sql
+      ```sql
       SELECT * FROM Food WHERE category IN ('riceroll','bread') AND store_at = 1
-    ```
+      ```
 
 6. **NOT-IN**
    - Food：查詢在商店1中尚未被預約的所有食物
 
-    ```sql
+      ```sql
       SELECT * FROM Food WHERE f_id NOT IN (SELECT f_id FROM Orders) AND store_at = 1
-    ```
+      ```
 
 7. **EXISTS**
    - Food：查詢在商店1中已經被預約的所有食物
 
-    ```sql
+      ```sql
       SELECT * FROM Food WHERE EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id)
-    ```
+      ```
 
 8. **NOT-EXISTS**
    - Food：查詢在商店1中尚未預約的所有食物
 
-    ```sql
+      ```sql
       SELECT * FROM Food WHERE NOT EXISTS (SELECT f_id FROM Orders WHERE Orders.f_id=Food.f_id )
-    ```
+      ```
 
 9. **COUNT**
 
    - Orders：查詢在商店1的訂單個數
 
-    ```sql
+      ```sql
       SELECT COUNT(*) FROM Orders WHERE s_id = 1
-    ```
+      ```
 
 10. **SUM**
 
